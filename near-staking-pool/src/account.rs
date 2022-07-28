@@ -42,11 +42,18 @@ impl AccountJson {
     } 
 }
 
-#[near_bindgen()]
+#[near_bindgen]
 impl Contract {
     pub fn get_account_info(&self, account_id: AccountId) -> AccountJson {
         let account = self.accounts.get(&account_id).unwrap();
         let new_reward = self.internal_cal_account_reward(&account);
         AccountJson::from(new_reward, account)
+    }
+
+    pub fn get_account_reward(&self, account_id: AccountId) -> Balance {
+        let account = self.accounts.get(&account_id).unwrap();
+        let new_reward = self.internal_cal_account_reward(&account);
+
+        account.pre_reward + new_reward
     }
 }
